@@ -2,7 +2,14 @@ import pytest
 import cv2
 import numpy as np
 import os
+import sys
+# 获取当前测试文件的目录，并将其添加到 sys.path 中
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_dir = os.path.dirname(current_dir)
+sys.path.insert(0, project_dir)
+
 from exercises.contour_detection import contour_detection
+
 
 class TestContourDetection:
     @classmethod
