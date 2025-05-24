@@ -27,4 +27,21 @@ def leaky_relu(x, alpha=0.01):
     # 1. 可以使用 np.maximum() 函数。
     # 2. 计算 alpha * x。
     # 3. 计算 max(alpha * x, x)。
-    pass 
+    # 示例用法
+ # 使用 np.where 来实现 Leaky ReLU 激活函数
+    return np.where(x >= 0, x, alpha * x)
+
+# 示例用法
+if __name__ == "__main__":
+    # 测试样例1
+    x1 = np.array([-1.0, 0.0, 1.0, 2.0])
+    alpha1 = 0.01
+    output1 = leaky_relu(x1, alpha1)
+    print(f"输入: {x1}")
+    print(f"输出: {output1}")
+
+    # 测试样例2 (默认 alpha)
+    x2 = np.array([-2.0, -1.0, 0.0, 1.0, 2.0])
+    output2 = leaky_relu(x2)
+    print(f"输入: {x2}")
+    print(f"输出: {output2}")
