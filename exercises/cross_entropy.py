@@ -33,38 +33,17 @@ def cross_entropy_loss(y_true, y_pred):
     # 4. 计算交叉熵损失：L = - sum(y_true * log(y_pred))。
     #    在 NumPy 中是 -np.sum(y_true * np.log(y_pred))。
     # 5. 计算所有样本的平均损失：L / N。
-    # 获取样本数量 N 和类别数量 C
+    # 获取样本数量和类别数量
     N = y_pred.shape[0]
-    C = y_pred.shape[1]
+    C = y_pred.shape[1] if len(y_pred.shape) > 1 else 1
     
-    # 如果 y_true 是类别索引 (形状为 (N,)), 将其转换为独热编码
-    if y_true.ndim == 1:
-        y_true = np.eye(C)[y_true]
+    # 如果y_true是类别索引，转换为独热编码
+    if len(y_true.shape) == 1 or y_true.shape[1] == 1:
+        y_true = np.eye(C)[y_true.astype(int)]
     
-    # 为防止 log(0) 错误，将 y_pred 中非常小的值替换为 1e-12
+    # 防止log(0)错误
     y_pred = np.clip(y_pred, 1e-12, 1.0)
     
     # 计算交叉熵损失
     loss = -np.sum(y_true * np.log(y_pred)) / N
-    
     return loss
-
-# 示例用法
-if __name__ == "__main__":
-    # 测试样例1：独热编码输入
-    y_true1 = np.array([[1, 0, 0],
-                        [0, 1, 0],
-                        [0, 0, 1]])
-    y_pred1 = np.array([[0.7, 0.2, 0.1],
-                        [0.1, 0.8, 0.1],
-                        [0.2, 0.2, 0.6]])
-    loss1 = cross_entropy_loss(y_true1, y_pred1)
-    print("测试样例1（独热编码输入）损失：", loss1)
-
-    # 测试样例2：类别索引输入
-    y_true2 = np.array([0, 1, 2])
-    y_pred2 = np.array([[0.7, 0.2, 0.1],
-                        [0.1, 0.8, 0.1],
-                        [0.2, 0.2, 0.6]])
-    loss2 = cross_entropy_loss(y_true2, y_pred2)
-    print("测试样例2（类别索引输入）损失：", loss2)
