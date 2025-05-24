@@ -32,4 +32,56 @@ def maxpool(x, kernel_size, stride):
     # 5. 提取当前池化窗口 window = x[h_start:h_start+kernel_size, w_start:w_start+kernel_size]。
     # 6. 找到窗口中的最大值 np.max(window)。
     # 7. 将最大值存入输出数组 out[i, j]。
-    pass 
+    # 获取输入数组的形状
+    H, W = x.shape
+    
+    # 计算输出的高度和宽度
+    out_H = (H - kernel_size) // stride + 1
+    out_W = (W - kernel_size) // stride + 1
+    
+    # 初始化输出数组
+    out = np.zeros((out_H, out_W))
+    
+    # 使用嵌套循环遍历输出数组的每个位置 (i, j)
+    for i in range(out_H):
+        for j in range(out_W):
+            # 计算当前池化窗口在输入数组 x 中的起始位置
+            h_start = i * stride
+            w_start = j * stride
+            
+            # 提取当前池化窗口
+            window = x[h_start:h_start + kernel_size, w_start:w_start + kernel_size]
+            
+            # 找到窗口中的最大值
+            out[i, j] = np.max(window)
+    
+    return out
+
+# 示例用法
+if __name__ == "__main__":
+    # 测试样例1
+    x1 = np.array([
+        [1, 2, 3, 4],
+        [5, 6, 7, 8],
+        [9, 10, 11, 12],
+        [13, 14, 15, 16]
+    ])
+    kernel_size1 = 2
+    stride1 = 2
+    output1 = maxpool(x1, kernel_size1, stride1)
+    print("测试样例1的输出：")
+    print(output1)
+
+    # 测试样例2
+    x2 = np.array([
+        [10, 20, 30, 40, 50],
+        [60, 70, 80, 90, 100],
+        [110, 120, 130, 140, 150],
+        [160, 170, 180, 190, 200],
+        [210, 220, 230, 240, 250]
+    ])
+    kernel_size2 = 3
+    stride2 = 2
+    output2 = maxpool(x2, kernel_size2, stride2)
+    print("测试样例2的输出：")
+    print(output2)
