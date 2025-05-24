@@ -38,4 +38,43 @@ def calculate_iou(box1, box2):
     # 6. 计算并集面积 union_area = box1_area + box2_area - intersection_area。
     # 7. 计算 IoU = intersection_area / union_area。
     #    注意处理 union_area 为 0 的情况 (除零错误)。
-    pass 
+    # 将输入转换为 NumPy 数组以方便计算
+    box1 = np.array(box1)
+    box2 = np.array(box2)
+
+    # 确定两个框相交区域的左上角坐标
+    x_left = max(box1[0], box2[0])
+    y_top = max(box1[1], box2[1])
+
+    # 确定两个框相交区域的右下角坐标
+    x_right = min(box1[2], box2[2])
+    y_bottom = min(box1[3], box2[3])
+
+    # 计算相交区域的面积
+    intersection_area = max(0, x_right - x_left) * max(0, y_bottom - y_top)
+
+    # 计算 box1 和 box2 的面积
+    box1_area = (box1[2] - box1[0]) * (box1[3] - box1[1])
+    box2_area = (box2[2] - box2[0]) * (box2[3] - box2[1])
+
+    # 计算并集面积
+    union_area = box1_area + box2_area - intersection_area
+
+    # 计算 IoU，处理 union_area 为 0 的情况
+    iou = intersection_area / union_area if union_area != 0 else 0
+
+    return iou
+
+# 示例用法
+if __name__ == "__main__":
+    # 测试样例1
+    box1 = [100, 100, 200, 200]
+    box2 = [150, 150, 250, 250]
+    iou1 = calculate_iou(box1, box2)
+    print(f"测试样例1的 IoU: {iou1:.4f}")
+
+    # 测试样例2（不相交的情况）
+    box3 = [50, 50, 100, 100]
+    box4 = [150, 150, 200, 200]
+    iou2 = calculate_iou(box3, box4)
+    print(f"测试样例2的 IoU: {iou2:.4f}")
